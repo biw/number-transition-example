@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/number-transition-example/precache-manifest.4a65d09d439369375c0bc5879ebddcdb.js"
+  "/number-transition-example/precache-manifest.b98bec4e59a63c183965558de2ab7469.js"
 );
 
 self.addEventListener('message', (event) => {
