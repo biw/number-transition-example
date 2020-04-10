@@ -6,6 +6,10 @@ Took about 45 minutes and could use some cleanup (PRs welcome)
 
 feel free to make a PR or an issue if you'd like to see this as a standalone lib.
 
+## Demo
+
+[https://biwills.com/number-transition-example/](https://biwills.com/number-transition-example/)
+
 ## LICENCE
 
 MIT
