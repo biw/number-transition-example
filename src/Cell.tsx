@@ -6,7 +6,7 @@ const showTransition = {
     opacity: 0,
     transform: "scale(0.4)",
   },
-  "30%": {
+  "55%": {
     opacity: 0,
     transform: "scale(0.4)",
   },
@@ -21,9 +21,9 @@ const hideTransition = {
     opacity: 1,
     transform: "scale(1)",
   },
-  "30%": {
+  "45%": {
     opacity: 0,
-    transform: "scale(1)",
+    transform: "scale(0.4)",
   },
   "100%": {
     opacity: 0,
@@ -34,27 +34,31 @@ const hideTransition = {
 const sty = StyleSheet.create({
   overall: {
     overflow: "hidden",
-    transition: "200ms ease all",
+    transitionTimingFunction: "ease",
+    transitionProperty: "all",
     position: "relative",
+    display: "block",
   },
   hiddenFixedWidthCell: {
     opacity: 0,
     cursorEvents: "none",
+    userSelect: 'none',
   },
   cell: {
     position: "absolute",
-    animationName: showTransition,
-    animationDuration: "200ms",
-    animationIterationCount: 1,
-    animationFillMode: "both",
     top: 0,
     left: 0,
+    animationIterationCount: 1,
+    animationFillMode: "both",
+    fontFeatureSettings: "tnum",
+  },
+  showCell: {
+    animationName: showTransition,
+    userSelect: 'auto',
   },
   hideCell: {
     animationName: hideTransition,
-    animationDuration: "200ms",
-    animationIterationCount: 1,
-    animationFillMode: "both",
+    
   },
 });
 
@@ -68,6 +72,7 @@ interface State {
 interface Props {
   value?: string;
   delayInMS: number;
+  durationInMS: number;
 }
 
 class Cell extends React.Component<Props, State> {
@@ -78,7 +83,7 @@ class Cell extends React.Component<Props, State> {
       activeCellOne: true,
       cellOneValue: this.props.value,
       cellTwoValue: undefined,
-      cellWidth: 16,
+      cellWidth: 0,
     };
   }
 
@@ -100,14 +105,17 @@ class Cell extends React.Component<Props, State> {
   setWidth = () => {
     if (this.fixedWidthCellRef.current) {
       const cellWidth = this.fixedWidthCellRef.current.scrollWidth;
+      console.log(cellWidth)
       if (cellWidth > this.state.cellWidth) {
         this.setState({ cellWidth });
       }
+    } else {
+      console.log('heyy')
     }
   };
 
   componentDidMount() {
-    this.setWidth();
+    requestAnimationFrame(this.setWidth)
   }
   componentDidUpdate() {
     this.setWidth();
@@ -119,43 +127,52 @@ class Cell extends React.Component<Props, State> {
       : this.state.cellTwoValue == null;
 
     return (
-      <div
-        style={{
-          width: activeCellHidden ? 0 : this.state.cellWidth,
-          transitionDelay: `${this.props.delayInMS}ms`,
-        }}
-        className={css(sty.overall)}
-        onClick={() =>
-          this.setState((s) => ({
-            activeCellOne: s.activeCellOne !== null ? !s.activeCellOne : null,
-          }))
-        }
-      >
-        <span
-          ref={this.fixedWidthCellRef}
-          className={css(sty.hiddenFixedWidthCell)}
+      <span>
+        <div
+          style={{
+            width: activeCellHidden ? 0 : this.state.cellWidth,
+            transitionDelay: `${this.props.delayInMS}ms`,
+            transitionDuration: `${this.props.durationInMS}ms`,
+          }}
+          className={css(sty.overall)}
+          onClick={() =>
+            this.setState((s) => ({
+              activeCellOne: s.activeCellOne !== null ? !s.activeCellOne : null,
+            }))
+          }
         >
-          8
-        </span>
-        <span
-          className={css(
-            sty.cell,
-            this.state.activeCellOne === true ? null : sty.hideCell
-          )}
-          style={{ animationDelay: `${this.props.delayInMS}ms` }}
-        >
-          {this.state.cellOneValue}
-        </span>
-        <span
-          className={css(
-            sty.cell,
-            this.state.activeCellOne === false ? null : sty.hideCell
-          )}
-          style={{ animationDelay: `${this.props.delayInMS}ms` }}
-        >
-          {this.state.cellTwoValue}
-        </span>
-      </div>
+          <span
+            ref={this.fixedWidthCellRef}
+            className={css(sty.hiddenFixedWidthCell)}
+          >
+            8
+          </span>
+          <span
+            className={css(
+              sty.cell,
+              this.state.activeCellOne === true ? sty.showCell : sty.hideCell
+            )}
+            style={{
+              animationDelay: `${this.props.delayInMS}ms`,
+              animationDuration: `${this.props.durationInMS}ms`,
+            }}
+          >
+            {this.state.cellOneValue}
+          </span>
+          <span
+            className={css(
+              sty.cell,
+              this.state.activeCellOne === false ? sty.showCell : sty.hideCell
+            )}
+            style={{
+              animationDelay: `${this.props.delayInMS}ms`,
+              animationDuration: `${this.props.durationInMS}ms`,
+            }}
+          >
+            {this.state.cellTwoValue}
+          </span>
+        </div>
+      </span>
     );
   }
 }
