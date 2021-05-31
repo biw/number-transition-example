@@ -8,7 +8,7 @@ feel free to make a PR or an issue if you'd like to see this as a standalone lib
 
 ## Demo
 
-[https://biwills.com/number-transition-example/](https://biwills.com/number-transition-example/)
+[https://biw.github.io/number-transition-example/](https://biw.github.io/number-transition-example/)
 
 ## LICENCE
 
